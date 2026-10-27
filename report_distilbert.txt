@@ -1,0 +1,43 @@
+split.csv: 6104 rows. scores.csv: 1461 rows.
+
+Rows per dataset and split
+--------------------------
+ dataset      split  rows  positive  negative  positive %
+mendeley       test   945       421       524       44.55
+     uci      train  4127       531      3596       12.87
+     uci validation   516        45       471        8.72
+     uci       test   516        66       450       12.79
+
+Metrics per test set (threshold 0.005492245312780142; positive when score >= threshold)
+---------------------------------------------------------------------------------------
+Each value is followed by its 95% bootstrap interval in brackets.
+
+Test set: uci_holdout
+  test rows                 516
+  positive rows             66 (12.79%)
+  negative rows             450 (87.21%)
+  bootstrap resamples       1000
+  random-scorer AP          0.1279 (equals the positive share)
+  random-scorer AUROC       0.5000
+  precision                 0.8400 [0.7605, 0.9155]
+  recall                    0.9545 [0.9032, 1.0000]
+  false-positive rate       0.0267 [0.0133, 0.0409]
+  AP                        0.9727 [0.9400, 0.9988]
+  AUROC                     0.9870 [0.9667, 0.9998]
+
+Test set: mendeley_all
+  test rows                 945
+  positive rows             421 (44.55%)
+  negative rows             524 (55.45%)
+  bootstrap resamples       1000
+  random-scorer AP          0.4455 (equals the positive share)
+  random-scorer AUROC       0.5000
+  precision                 0.9310 [0.9037, 0.9528]
+  recall                    0.9929 [0.9839, 1.0000]
+  false-positive rate       0.0592 [0.0408, 0.0818]
+  AP                        0.9961 [0.9924, 0.9991]
+  AUROC                     0.9966 [0.9930, 0.9993]
+
+Warnings
+--------
+- mendeley_all: recall, AP, AUROC at or above 0.99. Name the leakage check you ran and its result in section 3(e).

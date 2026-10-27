@@ -1,0 +1,45 @@
+== Audit (code-measured, on the files loaded) ==
+
+[uci] rows 5574, columns 2
+  label 'ham': 4827 (86.60%)
+  label 'spam': 747 (13.40%)
+  positive (unwanted) 747 (13.40%), negative 4827
+  missing/unrecognised target: 0
+  missing text (key feature): 0
+  exact duplicates (extra copies of the same normalised text): 415; texts with conflicting labels: 0
+
+[mendeley] rows 5971, columns 5
+  label 'ham': 4844 (81.13%)
+  label 'smishing': 638 (10.68%)
+  label 'spam': 489 (8.19%)
+  positive (unwanted) 1127 (18.87%), negative 4844
+  missing/unrecognised target: 0
+  missing text (key feature): 0
+  exact duplicates (extra copies of the same normalised text): 140; texts with conflicting labels: 0
+
+Time range: unavailable (neither file has a timestamp column).
+
+== Repeated entities in the primary dataset (uci) ==
+  repeated URLs: 36 distinct values appear on more than one row (97 mentions); most repeated: 9x
+  repeated phone numbers: 108 distinct values appear on more than one row (296 mentions); most repeated: 16x
+
+== Removals ==
+[uci] kept 5159 of 5574 rows: removed 415 (extra exact copies, plus all copies of label-conflicting texts). Protects the train/validation/test boundaries inside the dataset.
+[mendeley] kept 5831 of 5971 rows: removed 140 (extra exact copies, plus all copies of label-conflicting texts). Protects the train/validation/test boundaries inside the dataset.
+[mendeley] removed 4886 of 5831 rows whose text exactly matches a uci row. Protects the uci->mendeley dataset boundary; uci training data stays whole.
+
+[uci] near-duplicates (cosine >= 0.9 on word 1-2gram TF-IDF): 80 rows beyond the first of 71 groups.
+[uci] entity groups (near-duplicates plus rows sharing a URL or phone number): 103 groups of 2+ rows covering 282 rows; largest 17 rows. Each group goes whole to one split (protects train/validation/hold-out).
+[mendeley] test rows with a near-duplicate (cosine >= 0.9) in uci: 186 of 945 (reported only; not removed).
+
+== Leakage check (exact normalised text) ==
+  training rows that exactly duplicate a row in any test set: 0
+  training rows that exactly duplicate a validation row: 0
+
+== Baseline ==
+  train rows 4127, validation rows 516, hold-out rows 516, mendeley test rows 945
+  TF-IDF vocabulary size 10053; training time 0.10 s (fit TF-IDF + classifier)
+  threshold (lowest validation score with validation FPR <= 5%): 0.15022760936538102
+  python 3.13.7, pandas 3.0.2, numpy 2.4.4, scipy 1.17.1, scikit-learn 1.8.0, seed 42
+
+Next: python check_checkpoint.py --split ./split.csv --scores ./scores.csv --threshold 0.15022760936538102
